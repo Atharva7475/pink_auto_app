@@ -6,7 +6,6 @@ Pink Auto is a ride-hailing application designed specifically for auto-rickshaw 
 
 - **User Roles:** Distinct interfaces and functionality for Customers and Drivers.
 - **Authentication:** Secure OTP-based login system.
-- **Real-time Location:** Integrated Google Maps for live location tracking and fare estimation.
 - **Driver Onboarding:** Comprehensive driver registration flow, including document uploads (Driving License, RC, Aadhaar).
 - **State Management:** Efficient state handling using Riverpod.
 
@@ -14,7 +13,6 @@ Pink Auto is a ride-hailing application designed specifically for auto-rickshaw 
 
 - **Framework:** Flutter (Dart)
 - **Routing:** GoRouter
-- **Maps:** Google Maps Flutter SDK, Geolocator
 - **State Management:** Riverpod, Shared Preferences
 
 ## Getting Started
@@ -22,7 +20,6 @@ Pink Auto is a ride-hailing application designed specifically for auto-rickshaw 
 ### Prerequisites
 
 - Flutter SDK (latest stable version)
-- A valid Google Maps API Key configured for both Android and iOS platforms.
 
 ### Installation
 
