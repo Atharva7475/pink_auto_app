@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 
 class ActiveRideScreen extends StatefulWidget {
   const ActiveRideScreen({Key? key}) : super(key: key);
@@ -11,6 +12,63 @@ class ActiveRideScreen extends StatefulWidget {
 
 class _ActiveRideScreenState extends State<ActiveRideScreen> {
   bool isRideStarted = false;
+  GoogleMapController? _mapController;
+  bool _locationPermissionGranted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _handleLocationPermission();
+  }
+
+  Future<void> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Location services are disabled.')));
+      return;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Location permissions are denied')));
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Location permissions are permanently denied, we cannot request permissions.')));
+      return;
+    }
+
+    setState(() {
+      _locationPermissionGranted = true;
+    });
+
+    _moveToCurrentLocation();
+  }
+
+  Future<void> _moveToCurrentLocation() async {
+    if (_locationPermissionGranted) {
+      try {
+        Position position = await Geolocator.getCurrentPosition();
+        _mapController?.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+              target: LatLng(position.latitude, position.longitude),
+              zoom: 16,
+            ),
+          ),
+        );
+      } catch (e) {
+        debugPrint("Error getting location: $e");
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +76,17 @@ class _ActiveRideScreenState extends State<ActiveRideScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          const GoogleMap(
-            initialCameraPosition: CameraPosition(
+          GoogleMap(
+            initialCameraPosition: const CameraPosition(
               target: LatLng(19.0760, 72.8777),
               zoom: 16,
             ),
             zoomControlsEnabled: false,
+            myLocationEnabled: _locationPermissionGranted,
+            myLocationButtonEnabled: false,
+            onMapCreated: (GoogleMapController controller) {
+              _mapController = controller;
+            },
           ),
           SafeArea(
             child: Padding(
@@ -34,6 +97,23 @@ class _ActiveRideScreenState extends State<ActiveRideScreen> {
                   icon: const Icon(Icons.arrow_back, color: Colors.black),
                   onPressed: () => context.go('/driver-dashboard'),
                 ),
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 340, right: 16),
+              child: FloatingActionButton(
+                backgroundColor: Colors.white,
+                onPressed: () {
+                  if (!_locationPermissionGranted) {
+                    _handleLocationPermission();
+                  } else {
+                    _moveToCurrentLocation();
+                  }
+                },
+                child: Icon(Icons.my_location, color: theme.colorScheme.primary),
               ),
             ),
           ),
