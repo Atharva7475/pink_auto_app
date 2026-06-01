@@ -21,7 +21,7 @@ class _VehicleNumberScreenState extends State<VehicleNumberScreen> {
   void _proceedToDocumentUpload() {
     if (_formKey.currentState?.validate() ?? false) {
       // In a real app, you might save this number to state or pass it along.
-      context.go('/driver-document-upload');
+      context.push('/driver-document-upload');
     }
   }
 

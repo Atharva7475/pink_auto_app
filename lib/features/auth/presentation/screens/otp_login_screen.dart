@@ -36,7 +36,7 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
             children: [
               const SizedBox(height: 32),
               Text(
-                isCustomer ? 'Enter your mobile number or email' : 'Enter your mobile number',
+                'Enter your mobile number',
                 style: theme.textTheme.titleLarge,
               ),
               const SizedBox(height: 8),
@@ -47,47 +47,28 @@ class _OtpLoginScreenState extends State<OtpLoginScreen> {
               const SizedBox(height: 32),
               TextField(
                 controller: _inputController,
-                keyboardType: isCustomer ? TextInputType.emailAddress : TextInputType.phone,
-                maxLength: isCustomer ? null : 10,
-                decoration: InputDecoration(
-                  hintText: isCustomer ? 'Mobile Number or Email' : 'Mobile Number',
-                  prefixIcon: Icon(isCustomer ? Icons.person : Icons.phone),
-                  prefixText: isCustomer ? null : '+91 ',
+                keyboardType: TextInputType.phone,
+                maxLength: 10,
+                decoration: const InputDecoration(
+                  hintText: 'Mobile Number',
+                  prefixIcon: Icon(Icons.phone),
+                  prefixText: '+91 ',
                 ),
               ),
               const Spacer(),
               ElevatedButton(
                 onPressed: () {
                   final input = _inputController.text.trim();
-                  bool isValid = false;
-                  bool isEmail = false;
                   
-                  if (isCustomer) {
-                    final phoneRegex = RegExp(r'^\d{10}$');
-                    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-                    
-                    if (phoneRegex.hasMatch(input)) {
-                      isValid = true;
-                    } else if (emailRegex.hasMatch(input)) {
-                      isValid = true;
-                      isEmail = true;
-                    }
-                  } else {
-                    if (input.length == 10 && RegExp(r'^\d+$').hasMatch(input)) {
-                      isValid = true;
-                    }
-                  }
-
-                  if (isValid) {
-                    context.go('/otp-verify', extra: {
+                  if (input.length == 10 && RegExp(r'^\d+$').hasMatch(input)) {
+                    context.push('/otp-verify', extra: {
                       'role': widget.role, 
-                      'phone': isEmail ? '' : input,
-                      'email': isEmail ? input : '',
+                      'phone': input,
                     });
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(isCustomer ? 'Enter a valid 10-digit number or email' : 'Enter a valid 10-digit number')
+                      const SnackBar(
+                        content: Text('Enter a valid 10-digit number')
                       ),
                     );
                   }

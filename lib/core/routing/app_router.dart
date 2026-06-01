@@ -18,6 +18,19 @@ import '../../features/driver/presentation/screens/active_ride_screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 
+CustomTransitionPage buildPageWithDefaultTransition<T>({
+  required BuildContext context,
+  required GoRouterState state,
+  required Widget child,
+}) {
+  return CustomTransitionPage<T>(
+    key: state.pageKey,
+    child: child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+        FadeTransition(opacity: animation, child: child),
+  );
+}
+
 final appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
   initialLocation: '/',
@@ -28,32 +41,51 @@ final appRouter = GoRouter(
     ),
     GoRoute(
       path: '/onboarding',
-      builder: (context, state) => const OnboardingScreen(),
+      pageBuilder: (context, state) => buildPageWithDefaultTransition(
+        context: context,
+        state: state,
+        child: const OnboardingScreen(),
+      ),
     ),
     GoRoute(
       path: '/role-selection',
-      builder: (context, state) => const RoleSelectionScreen(),
+      pageBuilder: (context, state) => buildPageWithDefaultTransition(
+        context: context,
+        state: state,
+        child: const RoleSelectionScreen(),
+      ),
     ),
     GoRoute(
       path: '/login',
-      builder: (context, state) {
+      pageBuilder: (context, state) {
         final role = state.extra as String? ?? 'customer';
-        return OtpLoginScreen(role: role);
+        return buildPageWithDefaultTransition(
+          context: context,
+          state: state,
+          child: OtpLoginScreen(role: role),
+        );
       },
     ),
     GoRoute(
       path: '/otp-verify',
-      builder: (context, state) {
+      pageBuilder: (context, state) {
         final extra = state.extra as Map<String, dynamic>? ?? {};
         final role = extra['role'] as String? ?? 'customer';
         final phone = extra['phone'] as String? ?? '';
-        final email = extra['email'] as String? ?? '';
-        return OtpVerificationScreen(role: role, phone: phone, email: email);
+        return buildPageWithDefaultTransition(
+          context: context,
+          state: state,
+          child: OtpVerificationScreen(role: role, phone: phone),
+        );
       },
     ),
     GoRoute(
       path: '/customer-home',
-      builder: (context, state) => const CustomerHomeScreen(),
+      pageBuilder: (context, state) => buildPageWithDefaultTransition(
+        context: context,
+        state: state,
+        child: const CustomerHomeScreen(),
+      ),
     ),
     GoRoute(
       path: '/location-search',
@@ -73,7 +105,11 @@ final appRouter = GoRouter(
     ),
     GoRoute(
       path: '/driver-dashboard',
-      builder: (context, state) => const DriverDashboardScreen(),
+      pageBuilder: (context, state) => buildPageWithDefaultTransition(
+        context: context,
+        state: state,
+        child: const DriverDashboardScreen(),
+      ),
     ),
     GoRoute(
       path: '/incoming-request',
@@ -85,11 +121,19 @@ final appRouter = GoRouter(
     ),
     GoRoute(
       path: '/vehicle-number',
-      builder: (context, state) => const VehicleNumberScreen(),
+      pageBuilder: (context, state) => buildPageWithDefaultTransition(
+        context: context,
+        state: state,
+        child: const VehicleNumberScreen(),
+      ),
     ),
     GoRoute(
       path: '/driver-document-upload',
-      builder: (context, state) => const DriverDocumentUploadScreen(),
+      pageBuilder: (context, state) => buildPageWithDefaultTransition(
+        context: context,
+        state: state,
+        child: const DriverDocumentUploadScreen(),
+      ),
     ),
   ],
 );

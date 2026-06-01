@@ -29,7 +29,7 @@ class RoleSelectionScreen extends StatelessWidget {
               icon: Icons.person_outline,
               onTap: () {
                 // Navigate to Customer Login/Home
-                context.go('/login', extra: 'customer');
+                context.push('/login', extra: 'customer');
               },
             ),
             const SizedBox(height: 24),
@@ -39,7 +39,7 @@ class RoleSelectionScreen extends StatelessWidget {
               icon: Icons.drive_eta_outlined,
               onTap: () {
                 // Navigate to Driver Login/Home
-                context.go('/login', extra: 'driver');
+                context.push('/login', extra: 'driver');
               },
             ),
           ],

@@ -48,7 +48,7 @@ class OnboardingScreen extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    context.go('/role-selection');
+                    context.push('/role-selection');
                   },
                   child: const Text('Get Started'),
                 ),

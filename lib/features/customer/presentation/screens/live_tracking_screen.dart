@@ -97,6 +97,14 @@ class LiveTrackingScreen extends StatelessWidget {
                   const Divider(),
                   const SizedBox(height: 16),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Estimated Fare', style: theme.textTheme.titleMedium),
+                      Text('₹ 150', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: Colors.green.shade800)),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
                     children: [
                       const CircleAvatar(
                         radius: 30,
@@ -145,6 +153,19 @@ class LiveTrackingScreen extends StatelessWidget {
                         ),
                       ),
                     ],
+                  ),
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    width: double.infinity,
+                    child: TextButton(
+                      onPressed: () {
+                        context.go('/customer-home');
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.red,
+                      ),
+                      child: const Text('Cancel Ride'),
+                    ),
                   ),
                 ],
               ),

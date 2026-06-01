@@ -5,13 +5,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 class OtpVerificationScreen extends StatefulWidget {
   final String role;
   final String phone;
-  final String email;
 
   const OtpVerificationScreen({
     Key? key,
     required this.role,
     required this.phone,
-    this.email = '',
   }) : super(key: key);
 
   @override
@@ -36,9 +34,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       if (widget.phone.isNotEmpty) {
         await prefs.setString('phone', widget.phone);
       }
-      if (widget.email.isNotEmpty) {
-        await prefs.setString('email', widget.email);
-      }
 
       if (!mounted) return;
       if (widget.role == 'customer') {
@@ -61,7 +56,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final String sentTo = widget.email.isNotEmpty ? widget.email : '+91 ${widget.phone}';
+    final String sentTo = '+91 ${widget.phone}';
 
     return Scaffold(
       appBar: AppBar(
